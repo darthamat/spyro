@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "dam.pmdm.spyrothedragon"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "dam.pmdm.spyrothedragon"
@@ -31,7 +32,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        dataBinding = true
+    }
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 
@@ -44,6 +47,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

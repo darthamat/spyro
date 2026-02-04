@@ -1,56 +1,45 @@
-package dam.pmdm.spyrothedragon.adapters;
+package dam.pmdm.spyrothedragon.adapters
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import dam.pmdm.spyrothedragon.R
+import dam.pmdm.spyrothedragon.models.Collectible
 
-import androidx.recyclerview.widget.RecyclerView;
+class CollectiblesAdapter(
+    private val list: List<Collectible>
+) : RecyclerView.Adapter<CollectiblesAdapter.CollectiblesViewHolder>() {
 
-import java.util.List;
+    private val collectibleImages = mapOf(
+        "dragon_eggs" to R.drawable.dragon_eggs,
+        "gems" to R.drawable.gems,
+        "skill_points" to R.drawable.skill_points,
+        "spirit_crates" to R.drawable.spirit_crates,
+        "dragonflies" to R.drawable.dragonflies,
+        "egg_thief" to R.drawable.egg_thief
+    )
 
-import dam.pmdm.spyrothedragon.R;
-import dam.pmdm.spyrothedragon.models.Collectible;
-
-public class CollectiblesAdapter extends RecyclerView.Adapter<CollectiblesAdapter.CollectiblesViewHolder> {
-
-    private List<Collectible> list;
-
-    public CollectiblesAdapter(List<Collectible> collectibleList) {
-        this.list = collectibleList;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectiblesViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.cardview, parent, false)
+        return CollectiblesViewHolder(view)
     }
 
-    @Override
-    public CollectiblesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
-        return new CollectiblesViewHolder(view);
+    override fun onBindViewHolder(holder: CollectiblesViewHolder, position: Int) {
+        val collectible = list[position]
+        holder.nameTextView.text = collectible.name
+
+        val drawableRes = collectibleImages[collectible.image] ?: R.drawable.placeholder
+        holder.imageImageView.setImageResource(drawableRes)
     }
 
-    @Override
-    public void onBindViewHolder(CollectiblesViewHolder holder, int position) {
-        Collectible collectible = list.get(position);
-        holder.nameTextView.setText(collectible.getName());
+    override fun getItemCount(): Int = list.size
 
-        // Cargar la imagen (simulado con un recurso drawable)
-        int imageResId = holder.itemView.getContext().getResources().getIdentifier(collectible.getImage(), "drawable", holder.itemView.getContext().getPackageName());
-        holder.imageImageView.setImageResource(imageResId);
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
-    public static class CollectiblesViewHolder extends RecyclerView.ViewHolder {
-
-        TextView nameTextView;
-        ImageView imageImageView;
-
-        public CollectiblesViewHolder(View itemView) {
-            super(itemView);
-            nameTextView = itemView.findViewById(R.id.name);
-            imageImageView = itemView.findViewById(R.id.image);
-        }
+    class CollectiblesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameTextView: TextView = itemView.findViewById(R.id.name)
+        val imageImageView: ImageView = itemView.findViewById(R.id.image)
     }
 }

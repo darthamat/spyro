@@ -1,93 +1,87 @@
-package dam.pmdm.spyrothedragon;
+package dam.pmdm.spyrothedragon
 
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
+class MainActivity : AppCompatActivity() {
 
-import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding;
+    private lateinit var binding: ActivityMainBinding
+    private var navController: NavController? = null
 
-public class MainActivity extends AppCompatActivity {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    private ActivityMainBinding binding;
-    NavController navController = null;
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        val navHostFragment: Fragment? =
+            supportFragmentManager.findFragmentById(R.id.navHostFragment)
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
-        if (navHostFragment != null) {
-            navController = NavHostFragment.findNavController(navHostFragment);
-            NavigationUI.setupWithNavController(binding.navView, navController);
-            NavigationUI.setupActionBarWithNavController(this, navController);
+        navHostFragment?.let {
+            navController = NavHostFragment.findNavController(it)
+            NavigationUI.setupWithNavController(binding.navView, navController!!)
+            NavigationUI.setupActionBarWithNavController(this, navController!!)
         }
 
-        binding.navView.setOnItemSelectedListener(this::selectedBottomMenu);
-
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_characters ||
-                    destination.getId() == R.id.navigation_worlds ||
-                    destination.getId() == R.id.navigation_collectibles) {
-                // Para las pantallas de los tabs, no queremos que aparezca la flecha de atrás
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            }
-            else {
-                // Si se navega a una pantalla donde se desea mostrar la flecha de atrás, habilítala
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-        });
-
-    }
-
-    private boolean selectedBottomMenu(@NonNull MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.nav_characters)
-            navController.navigate(R.id.navigation_characters);
-        else
-        if (menuItem.getItemId() == R.id.nav_worlds)
-            navController.navigate(R.id.navigation_worlds);
-        else
-            navController.navigate(R.id.navigation_collectibles);
-        return true;
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Infla el menú
-        getMenuInflater().inflate(R.menu.about_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Gestiona el clic en el ítem de información
-        if (item.getItemId() == R.id.action_info) {
-            showInfoDialog();  // Muestra el diálogo
-            return true;
+        binding.navView.setOnItemSelectedListener { menuItem ->
+            selectedBottomMenu(menuItem)
         }
-        return super.onOptionsItemSelected(item);
+
+        navController?.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_characters,
+                R.id.navigation_worlds,
+                R.id.navigation_collectibles -> {
+                    // En las pantallas de los tabs no mostramos la flecha atrás
+                    supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                }
+                else -> {
+                    // En el resto de pantallas sí
+                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                }
+            }
+        }
     }
 
-    private void showInfoDialog() {
-        // Crear un diálogo de información
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.title_about)
-                .setMessage(R.string.text_about)
-                .setPositiveButton(R.string.accept, null)
-                .show();
+    private fun selectedBottomMenu(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.nav_characters ->
+                navController?.navigate(R.id.navigation_characters)
+            R.id.nav_worlds ->
+                navController?.navigate(R.id.navigation_worlds)
+            else ->
+                navController?.navigate(R.id.navigation_collectibles)
+        }
+        return true
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.about_menu, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.action_info) {
+            showInfoDialog()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
 
+    private fun showInfoDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.title_about)
+            .setMessage(R.string.text_about)
+            .setPositiveButton(R.string.accept, null)
+            .show()
+    }
 }

@@ -1,102 +1,88 @@
-package dam.pmdm.spyrothedragon.ui;
+package dam.pmdm.spyrothedragon.ui
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import dam.pmdm.spyrothedragon.R
+import dam.pmdm.spyrothedragon.adapters.CollectiblesAdapter
+import dam.pmdm.spyrothedragon.databinding.FragmentCollectiblesBinding
+import dam.pmdm.spyrothedragon.models.Collectible
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
+import java.io.InputStream
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class CollectiblesFragment : Fragment() {
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
+    private var _binding: FragmentCollectiblesBinding? = null
+    private val binding get() = _binding!!
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: CollectiblesAdapter
+    private val collectiblesList = mutableListOf<Collectible>()
 
-import dam.pmdm.spyrothedragon.R;
-import dam.pmdm.spyrothedragon.adapters.CollectiblesAdapter;
-import dam.pmdm.spyrothedragon.databinding.FragmentCollectiblesBinding;
-import dam.pmdm.spyrothedragon.models.Collectible;
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-public class CollectiblesFragment extends Fragment {
+        _binding = FragmentCollectiblesBinding.inflate(inflater, container, false)
 
-    private FragmentCollectiblesBinding binding;
-    private RecyclerView recyclerView;
-    private CollectiblesAdapter adapter;
-    private List<Collectible> collectiblesList;
+        recyclerView = binding.recyclerViewCollectibles
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = CollectiblesAdapter(collectiblesList)
+        recyclerView.adapter = adapter
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
-        binding = FragmentCollectiblesBinding.inflate(inflater, container, false);
-        recyclerView = binding.recyclerViewCollectibles;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        collectiblesList = new ArrayList<>();
-        adapter = new CollectiblesAdapter(collectiblesList);
-        recyclerView.setAdapter(adapter);
-
-        loadCollectibles();
-        return binding.getRoot();
+        loadCollectibles()
+        return binding.root
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    private void loadCollectibles() {
+    private fun loadCollectibles() {
         try {
-            InputStream inputStream = getResources().openRawResource(R.raw.collectibles);
+            val inputStream: InputStream =
+                resources.openRawResource(R.raw.collectibles)
 
-            // Crear un parser XML
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser parser = factory.newPullParser();
-            parser.setInput(inputStream, null);
+            val factory = XmlPullParserFactory.newInstance()
+            factory.isNamespaceAware = true
+            val parser = factory.newPullParser()
+            parser.setInput(inputStream, null)
 
-            int eventType = parser.getEventType();
-            Collectible currentCollectible = null;
+            var eventType = parser.eventType
+            var currentCollectible: Collectible? = null
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                String tagName = null;
-
-                switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        tagName = parser.getName();
-
-                        if ("collectible".equals(tagName)) {
-                            currentCollectible = new Collectible();
-                        } else if (currentCollectible != null) {
-                            if ("name".equals(tagName)) {
-                                currentCollectible.setName(parser.nextText());
-                            } else if ("description".equals(tagName)) {
-                                currentCollectible.setDescription(parser.nextText());
-                            } else if ("image".equals(tagName)) {
-                                currentCollectible.setImage(parser.nextText());
-                            }
+                when (eventType) {
+                    XmlPullParser.START_TAG -> {
+                        when (parser.name) {
+                            "collectible" -> currentCollectible = Collectible()
+                            "name" -> currentCollectible?.name = parser.nextText()
+                            "description" -> currentCollectible?.description = parser.nextText()
+                            "image" -> currentCollectible?.image = parser.nextText()
                         }
-                        break;
+                    }
 
-                    case XmlPullParser.END_TAG:
-                        tagName = parser.getName();
-
-                        if ("collectible".equals(tagName) && currentCollectible != null) {
-                            collectiblesList.add(currentCollectible);
+                    XmlPullParser.END_TAG -> {
+                        if (parser.name == "collectible" && currentCollectible != null) {
+                            collectiblesList.add(currentCollectible)
                         }
-                        break;
+                    }
                 }
-
-                eventType = parser.next();
+                eventType = parser.next()
             }
 
-            adapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            e.printStackTrace();
+            adapter.notifyDataSetChanged()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

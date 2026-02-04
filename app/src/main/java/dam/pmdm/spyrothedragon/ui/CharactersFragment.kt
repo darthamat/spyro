@@ -1,108 +1,88 @@
-package dam.pmdm.spyrothedragon.ui;
+package dam.pmdm.spyrothedragon.ui
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import dam.pmdm.spyrothedragon.R
+import dam.pmdm.spyrothedragon.adapters.CharactersAdapter
+import dam.pmdm.spyrothedragon.databinding.FragmentCharactersBinding
+import dam.pmdm.spyrothedragon.models.Character
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
+import java.io.InputStream
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class CharactersFragment : Fragment() {
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
+    private var _binding: FragmentCharactersBinding? = null
+    private val binding get() = _binding!!
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: CharactersAdapter
+    private val charactersList = mutableListOf<Character>()
 
-import dam.pmdm.spyrothedragon.R;
-import dam.pmdm.spyrothedragon.models.Character;
-import dam.pmdm.spyrothedragon.adapters.CharactersAdapter;
-import dam.pmdm.spyrothedragon.databinding.FragmentCharactersBinding;
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
+        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
 
-public class CharactersFragment extends Fragment {
+        recyclerView = binding.recyclerViewCharacters
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = CharactersAdapter(charactersList)
+        recyclerView.adapter = adapter
 
-    private FragmentCharactersBinding binding;
-
-    private RecyclerView recyclerView;
-    private CharactersAdapter adapter;
-    private List<Character> charactersList;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
-        binding = FragmentCharactersBinding.inflate(inflater, container, false);
-        // Inicializamos el RecyclerView y el adaptador
-        recyclerView = binding.recyclerViewCharacters;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        charactersList = new ArrayList<>();
-        adapter = new CharactersAdapter(charactersList);
-        recyclerView.setAdapter(adapter);
-
-        // Cargamos los personajes desde el XML
-        loadCharacters();
-        return binding.getRoot();
+        loadCharacters()
+        return binding.root
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    private void loadCharacters() {
+    private fun loadCharacters() {
         try {
-            // Cargamos el archivo XML desde res/xml (NOTA: ahora se usa R.xml.characters)
-            InputStream inputStream = getResources().openRawResource(R.raw.characters);
+            val inputStream: InputStream =
+                resources.openRawResource(R.raw.characters)
 
-            // Crear un parser XML
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser parser = factory.newPullParser();
-            parser.setInput(inputStream, null);
+            val factory = XmlPullParserFactory.newInstance()
+            factory.isNamespaceAware = true
+            val parser = factory.newPullParser()
+            parser.setInput(inputStream, null)
 
-            int eventType = parser.getEventType();
-            Character currentCharacter = null;
+            var eventType = parser.eventType
+            var currentCharacter: Character? = null
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                String tagName = null;
-
-                switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        tagName = parser.getName();
-
-                        if ("character".equals(tagName)) {
-                            currentCharacter = new Character();
-                        } else if (currentCharacter != null) {
-                            if ("name".equals(tagName)) {
-                                currentCharacter.setName(parser.nextText());
-                            } else if ("description".equals(tagName)) {
-                                currentCharacter.setDescription(parser.nextText());
-                            } else if ("image".equals(tagName)) {
-                                currentCharacter.setImage(parser.nextText());
-                            }
+                when (eventType) {
+                    XmlPullParser.START_TAG -> {
+                        when (parser.name) {
+                            "character" -> currentCharacter = Character()
+                            "name" -> currentCharacter?.name = parser.nextText()
+                            "description" -> currentCharacter?.description = parser.nextText()
+                            "image" -> currentCharacter?.image = parser.nextText()
                         }
-                        break;
+                    }
 
-                    case XmlPullParser.END_TAG:
-                        tagName = parser.getName();
-
-                        if ("character".equals(tagName) && currentCharacter != null) {
-                            charactersList.add(currentCharacter);
+                    XmlPullParser.END_TAG -> {
+                        if (parser.name == "character" && currentCharacter != null) {
+                            charactersList.add(currentCharacter)
                         }
-                        break;
+                    }
                 }
-
-                eventType = parser.next();
+                eventType = parser.next()
             }
 
-            adapter.notifyDataSetChanged(); // Notificamos al adaptador que los datos han cambiado
-        } catch (Exception e) {
-            e.printStackTrace();
+            adapter.notifyDataSetChanged()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
-
 }

@@ -1,102 +1,88 @@
-package dam.pmdm.spyrothedragon.ui;
+package dam.pmdm.spyrothedragon.ui
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import dam.pmdm.spyrothedragon.R
+import dam.pmdm.spyrothedragon.adapters.WorldsAdapter
+import dam.pmdm.spyrothedragon.databinding.FragmentWorldsBinding
+import dam.pmdm.spyrothedragon.models.World
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
+import java.io.InputStream
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class WorldsFragment : Fragment() {
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
+    private var _binding: FragmentWorldsBinding? = null
+    private val binding get() = _binding!!
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: WorldsAdapter
+    private val worldsList = mutableListOf<World>()
 
-import dam.pmdm.spyrothedragon.R;
-import dam.pmdm.spyrothedragon.adapters.WorldsAdapter;
-import dam.pmdm.spyrothedragon.databinding.FragmentWorldsBinding;
-import dam.pmdm.spyrothedragon.models.World;
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-public class WorldsFragment extends Fragment {
+        _binding = FragmentWorldsBinding.inflate(inflater, container, false)
 
-    private FragmentWorldsBinding binding;
-    private RecyclerView recyclerView;
-    private WorldsAdapter adapter;
-    private List<World> worldsList;
+        recyclerView = binding.recyclerViewWorlds
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = WorldsAdapter(worldsList)
+        recyclerView.adapter = adapter
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
-        binding = FragmentWorldsBinding.inflate(inflater, container, false);
-        recyclerView = binding.recyclerViewWorlds;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        worldsList = new ArrayList<>();
-        adapter = new WorldsAdapter(worldsList);
-        recyclerView.setAdapter(adapter);
-
-        loadWorlds();
-        return binding.getRoot();
+        loadWorlds()
+        return binding.root
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    private void loadWorlds() {
+    private fun loadWorlds() {
         try {
-            InputStream inputStream = getResources().openRawResource(R.raw.worlds);
+            val inputStream: InputStream =
+                resources.openRawResource(R.raw.worlds)
 
-            // Crear un parser XML
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser parser = factory.newPullParser();
-            parser.setInput(inputStream, null);
+            val factory = XmlPullParserFactory.newInstance()
+            factory.isNamespaceAware = true
+            val parser = factory.newPullParser()
+            parser.setInput(inputStream, null)
 
-            int eventType = parser.getEventType();
-            World currentWorld = null;
+            var eventType = parser.eventType
+            var currentWorld: World? = null
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                String tagName = null;
-
-                switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        tagName = parser.getName();
-
-                        if ("world".equals(tagName)) {
-                            currentWorld = new World();
-                        } else if (currentWorld != null) {
-                            if ("name".equals(tagName)) {
-                                currentWorld.setName(parser.nextText());
-                            } else if ("description".equals(tagName)) {
-                                currentWorld.setDescription(parser.nextText());
-                            } else if ("image".equals(tagName)) {
-                                currentWorld.setImage(parser.nextText());
-                            }
+                when (eventType) {
+                    XmlPullParser.START_TAG -> {
+                        when (parser.name) {
+                            "world" -> currentWorld = World()
+                            "name" -> currentWorld?.name = parser.nextText()
+                            "description" -> currentWorld?.description = parser.nextText()
+                            "image" -> currentWorld?.image = parser.nextText()
                         }
-                        break;
+                    }
 
-                    case XmlPullParser.END_TAG:
-                        tagName = parser.getName();
-
-                        if ("world".equals(tagName) && currentWorld != null) {
-                            worldsList.add(currentWorld);
+                    XmlPullParser.END_TAG -> {
+                        if (parser.name == "world" && currentWorld != null) {
+                            worldsList.add(currentWorld)
                         }
-                        break;
+                    }
                 }
-
-                eventType = parser.next();
+                eventType = parser.next()
             }
 
-            adapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            e.printStackTrace();
+            adapter.notifyDataSetChanged()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
