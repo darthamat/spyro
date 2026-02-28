@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,12 +32,18 @@ class MainActivity : AppCompatActivity() {
 
         guideContainer = findViewById(R.id.guideContainer)
 
+        guideContainer.bringToFront()
+        guideContainer.requestLayout()
+        guideContainer.invalidate()
+
         val prefs = getSharedPreferences("guide", MODE_PRIVATE)
-        val shown = prefs.getBoolean("shown", false)
+        val shown = prefs.getBoolean("shown", true)
 
         if (!shown) {
-            showGuide(1)
+           showGuide(1)
         }
+
+
 
         val navHostFragment: Fragment? =
             supportFragmentManager.findFragmentById(R.id.navHostFragment)
@@ -65,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        prefs.edit().putBoolean("shown", true).apply()
+
     }
 
     private fun selectedBottomMenu(menuItem: MenuItem): Boolean {
@@ -115,8 +123,15 @@ class MainActivity : AppCompatActivity() {
             else -> R.layout.guia_6_final
         }
 
-        layoutInflater.inflate(layout, guideContainer, true)
+        val guideView = layoutInflater.inflate(layout, guideContainer, false)
+        guideContainer.addView(guideView)
+
+        guideView.startAnimation(
+            AnimationUtils.loadAnimation(this, R.anim.scale_in)
+        )
     }
+
+
 }
 
 

@@ -1,21 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="@drawable/background"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:text="Bienvenido al mundo de Spyro"
-        android:textSize="24sp"
-        android:textColor="@android:color/white"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
+        android:background="@drawable/bubble"
+        android:padding="16dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="16dp">
 
-    <Button
-        android:id="@+id/btnStart"
-        android:text="Comenzar"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aquí podrás explorar a todos los objetosa coleccionables del mundo de Spyro."
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
+
+</FrameLayout>
