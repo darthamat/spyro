@@ -3,6 +3,7 @@ package dam.pmdm.spyrothedragon
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
         val layout = when(step) {
             1 -> R.layout.guia_1_bienvenida
-            2 -> R.layout.guia_2_personajes
+            2 -> R.layout.guia_02_personajes
             3 -> R.layout.guia_3_mundos
             4 -> R.layout.guia_4_coleccionables
             5 -> R.layout.guia_5_info
