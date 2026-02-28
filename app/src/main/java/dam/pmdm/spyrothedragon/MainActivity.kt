@@ -3,6 +3,7 @@ package dam.pmdm.spyrothedragon
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,14 +14,27 @@ import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+
+
     private lateinit var binding: ActivityMainBinding
     private var navController: NavController? = null
+
+    private lateinit var guideContainer: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        guideContainer = findViewById(R.id.guideContainer)
+
+        val prefs = getSharedPreferences("guide", MODE_PRIVATE)
+        val shown = prefs.getBoolean("shown", false)
+
+        if (!shown) {
+            showGuide(1)
+        }
 
         val navHostFragment: Fragment? =
             supportFragmentManager.findFragmentById(R.id.navHostFragment)
@@ -49,6 +63,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        prefs.edit().putBoolean("shown", true).apply()
     }
 
     private fun selectedBottomMenu(menuItem: MenuItem): Boolean {
@@ -84,4 +100,22 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton(R.string.accept, null)
             .show()
     }
+
+    fun showGuide(step: Int) {
+        guideContainer.removeAllViews()
+        guideContainer.visibility = View.VISIBLE
+
+        val layout = when(step) {
+            1 -> R.layout.guia_1_bienvenida
+            2 -> R.layout.guia_2_personajes
+            3 -> R.layout.guia_3_mundos
+            4 -> R.layout.guia_4_coleccionables
+            5 -> R.layout.guia_5_info
+            else -> R.layout.guia_6_final
+        }
+
+        layoutInflater.inflate(layout, guideContainer, true)
+    }
 }
+
+
