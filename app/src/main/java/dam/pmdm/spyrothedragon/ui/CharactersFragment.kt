@@ -1,5 +1,6 @@
 package dam.pmdm.spyrothedragon.ui
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +39,18 @@ class CharactersFragment : Fragment() {
         recyclerView.adapter = adapter
 
         loadCharacters()
+
+        try {
+            val mediaPlayer = MediaPlayer.create(requireContext(), R.raw.spyro_click)
+            mediaPlayer.setOnCompletionListener { mp -> mp.release() } // Importante: liberar memoria al terminar
+            mediaPlayer.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         return binding.root
+
+
     }
 
     override fun onDestroyView() {

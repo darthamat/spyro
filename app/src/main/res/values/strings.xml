@@ -6,4 +6,8 @@
     <string name="title_about">Acerca de</string>
     <string name="text_about">Aplicación desarrollada por \n <b>Pedro A. Guirado Ranea</b></string>
     <string name="accept">Aceptar</string>
+    <string name="bienvenida">BIENVENIDO</string>
+    <string name="texto_bienvenida">Preparate para descubir un mundo mágico a traves de esta app inspirada en</string>
+    <string name="comenzar">Comenzar</string>
+    <string name="txtlogo">logo</string>
 </resources>

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         guideContainer.invalidate()
 
         val prefs = getSharedPreferences("guide", MODE_PRIVATE)
-        val shown = prefs.getBoolean("shown", true)
+        val shown = prefs.getBoolean("shown", false)
 
         if (!shown) {
            showGuide(1)

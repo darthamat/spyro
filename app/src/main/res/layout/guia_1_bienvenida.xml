@@ -13,7 +13,7 @@ android:layout_height="match_parent">
 
 
 <TextView
-    android:text="BIENVENIDO"
+    android:text="@string/bienvenida"
     android:textSize="48sp"
     android:textColor="@android:color/white"
     android:layout_gravity="center"
@@ -23,10 +23,10 @@ android:layout_height="match_parent">
 
 
         <TextView
-            android:text="Preparate para descubir un mundo mágico a traves de esta app inspirada en"
+            android:text="@string/texto_bienvenida"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:textColor="@color/purple"
+            android:textColor="@color/white"
             android:layout_gravity="center"
             android:layout_marginTop="100dp"
             android:layout_height="wrap_content"
@@ -34,16 +34,14 @@ android:layout_height="match_parent">
 
         <ImageView
             android:layout_width="300dp"
+            android:contentDescription="@string/txtlogo"
             android:layout_height="300dp"
             android:layout_gravity="center"
-            android:src="@drawable/Spyro_Logo_2018">
-
-
-
+            android:src="@drawable/spyro_logo_2018"/>
 
 <Button
     android:id="@+id/btnStart"
-    android:text="Comenzar"
+    android:text="@string/comenzar"
     android:textAlignment="center"
     android:layout_gravity="center"
     android:layout_height="wrap_content"
