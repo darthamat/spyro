@@ -5,12 +5,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#7ADECC27"
     android:clickable="true"
     android:focusable="true">
 
     <!-- CONTENEDOR QUE VAMOS A ANIMAR -->
     <!-- Círculo de enfoque para Personajes -->
+
+    <Button
+        android:id="@+id/btnFinGuia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="150dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/terminar_guia"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="NotSibling" />
     <View
         android:id="@+id/focus_circle"
         android:layout_width="70dp"

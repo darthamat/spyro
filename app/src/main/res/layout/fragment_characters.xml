@@ -13,9 +13,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        android:id="@+id/includeguia"
-        layout="@layout/guia_personajes"
-        />
+<!--    <include-->
+<!--        android:id="@+id/includeguia"-->
+<!--        layout="@layout/guia_personajes"-->
+<!--        />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

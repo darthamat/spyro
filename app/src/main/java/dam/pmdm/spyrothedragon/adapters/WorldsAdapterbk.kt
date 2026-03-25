@@ -10,9 +10,9 @@ import dam.pmdm.spyrothedragon.MainActivity
 import dam.pmdm.spyrothedragon.R
 import dam.pmdm.spyrothedragon.models.World
 
-class WorldsAdapter(
+class WorldsAdapterbk(
     private val list: List<World>
-) : RecyclerView.Adapter<WorldsAdapter.WorldsViewHolder>() {
+) : RecyclerView.Adapter<WorldsAdapterbk.WorldsViewHolder>() {
 
     private val worldImages = mapOf(
         "sunny_beach" to R.drawable.sunny_beach,
@@ -41,7 +41,7 @@ class WorldsAdapter(
             clickCount = 0 // Reiniciar
             // Llamar a la función del Activity para reproducir el video
             (activity as? MainActivity)?.playSecretVideo()
-
+                   
         }
     }
 

@@ -61,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         binding.includeguia.root.bringToFront()
          guideContainer = binding.includeguia.guideContainer
 
+        guideContainer.setOnClickListener {
+            // No hace nada, pero captura el clic para que no llegue a lo que hay debajo
+        }
+
         guideContainer.isClickable = true
         guideContainer.isFocusable = true
 
@@ -68,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         guideContainer.bringToFront()
 
-        guideContainer.visibility = View.GONE
+        //guideContainer.visibility = View.GONE
 
 //        val prefs = getSharedPreferences("guide", MODE_PRIVATE)
 //        val shown = prefs.getBoolean("shown", false)
@@ -119,18 +123,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showGuide(step: Int) {
-        guideContainer.removeAllViews()
+       guideContainer.removeAllViews()
         guideContainer.visibility = View.VISIBLE
 
-        guideContainer.elevation = 20f
+        if (step <= 4) {
+            binding.navView.alpha = 0.5f // Indicador visual de bloqueo
 
-        supportActionBar?.hide()
-        binding.navView.visibility = View.VISIBLE
-        binding.navView.isEnabled = false
+            // Esto desactiva la capacidad de hacer clic en cada botón individualmente
+            for (i in 0 until binding.navView.menu.size()) {
+                binding.navView.menu.getItem(i).isEnabled = false
+            }
 
-        binding.navView.alpha = 0.5f
+            // Opcional: Ocultar la Toolbar si lo prefieres
+            supportActionBar?.hide()
+        } else {
+            // Restaurar en los pasos finales
+            binding.navView.alpha = 1.0f
+            for (i in 0 until binding.navView.menu.size()) {
+                binding.navView.menu.getItem(i).isEnabled = true
+            }
+            supportActionBar?.show()
+        }
 
-        guideContainer.elevation = 15f
 
 
         val layout = when(step) {
@@ -148,16 +162,28 @@ class MainActivity : AppCompatActivity() {
         val nextBtn = guideView.findViewById<View>(R.id.btnNext) ?: guideView.findViewById<View>(R.id.btnStart)
 
         nextBtn?.setOnClickListener {
+            playClickSound()
             if (step < 6) {
+                when (step) {
+                    1 -> navController?.navigate(R.id.navigation_characters)
+                    2 -> navController?.navigate(R.id.navigation_worlds)
+                    3 -> navController?.navigate(R.id.navigation_collectibles)
+                }
+
+                guideContainer.removeAllViews()
+
                 showGuide(step + 1)
             } else {
+
+
                 finishGuide()
             }
         }
 
-//        guideView.findViewById<View>(R.id.btnStart)?.setOnClickListener {
-//            finishGuide()
-//        }
+        guideView.findViewById<View>(R.id.btnFinGuia)?.setOnClickListener {
+
+            finishGuide()
+        }
 
         guideView.startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.scale_in)
@@ -200,8 +226,16 @@ finguia?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha))
 
 
         }
+        if (step == 5 ||step == 6) {
 
-    }
+            supportActionBar?.show()
+            binding.navView.visibility = View.VISIBLE
+            binding.navView.isEnabled = true
+        }
+
+
+
+        }
 
     private fun finishGuide() {
         guideContainer.removeAllViews()
@@ -212,9 +246,55 @@ finguia?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha))
         binding.navView.visibility = View.VISIBLE
         binding.navView.isEnabled = true
 
+        for (i in 0 until binding.navView.menu.size()) {
+            binding.navView.menu.getItem(i).isEnabled = true
+        }
+
         // Guardamos en preferencias
         val prefs = getSharedPreferences("guide", MODE_PRIVATE)
         prefs.edit().putBoolean("shown", true).apply()
+    }
+
+    private fun playClickSound() {
+        try {
+            val mediaPlayer = android.media.MediaPlayer.create(this, R.raw.spyro_click)
+            mediaPlayer.setOnCompletionListener { it.release() }
+            mediaPlayer.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun playSecretVideo() {
+        // 1. Crear el VideoView dinámicamente para que ocupe toda la pantalla
+        val videoView = android.widget.VideoView(this)
+        val layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+        videoView.layoutParams = layoutParams
+
+        // 2. Añadirlo al guideContainer (que ya sabemos que está por encima de todo)
+        guideContainer.removeAllViews()
+        guideContainer.visibility = View.VISIBLE
+        guideContainer.addView(videoView)
+        guideContainer.elevation = 200f // Máxima prioridad visual
+
+        // 3. Configurar la ruta del video
+        val videoPath = "android.resource://" + packageName + "/" + R.raw.videoeasternegg
+        videoView.setVideoPath(videoPath)
+
+        // 4. Qué hacer cuando termine el video
+        videoView.setOnCompletionListener {
+            guideContainer.removeAllViews()
+            guideContainer.visibility = View.GONE
+
+            // Redirigir a la pestaña de mundos (por si acaso se movió)
+            navController?.navigate(R.id.navigation_worlds)
+        }
+
+        // 5. Iniciar la reproducción
+        videoView.start()
     }
 
 

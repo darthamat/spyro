@@ -1,6 +1,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/focus_circle"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/shape_circle_outline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        android:layout_marginBottom="5dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -13,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aquí podrás explorar a todos la info del mundo de Spyro."
+            android:text="El boton INFO muestra quien es el creqador de esta guia."
             android:textColor="@android:color/black"/>
     </LinearLayout>
 
