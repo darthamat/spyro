@@ -1,52 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:padding="20dp">
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
+    <!-- Título superior -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/txt_tituloBienvenida"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/purple_transp"
+    <!-- Texto de bienvenida -->
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/texto_bienvenida"
+        android:textColor="@color/gold"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        android:orientation="vertical">
+    <!-- Logo de Spyro (Ajustamos el tamaño para que no se coma la pantalla) -->
 
+    <!-- Botón al final -->
 
-<TextView
-    android:text="@string/bienvenida"
-    android:textSize="48sp"
-    android:textColor="@android:color/white"
-    android:layout_gravity="center"
-    android:layout_marginTop="50dp"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"/>
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="296dp"
+        android:layout_height="279dp"
+        android:layout_margin="5dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/spyro_logo_2018"
+        app:layout_constraintBottom_toTopOf="@+id/btnStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvWelcome"
+        app:layout_constraintVertical_bias="0.373" />
 
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="Comenzar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:text="@string/texto_bienvenida"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:layout_gravity="center"
-            android:layout_marginTop="100dp"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
-
-        <ImageView
-            android:layout_width="300dp"
-            android:contentDescription="@string/txtlogo"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:src="@drawable/spyro_logo_2018"/>
-
-<Button
-    android:id="@+id/btnStart"
-    android:text="@string/comenzar"
-    android:textAlignment="center"
-    android:layout_gravity="center"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"/>
-
-    </LinearLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

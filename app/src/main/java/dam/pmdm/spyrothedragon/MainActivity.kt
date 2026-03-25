@@ -13,7 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding
-import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,21 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        guideContainer = findViewById(R.id.guideContainer)
-
-        guideContainer.bringToFront()
-        guideContainer.requestLayout()
-        guideContainer.invalidate()
-
-        val prefs = getSharedPreferences("guide", MODE_PRIVATE)
-        val shown = prefs.getBoolean("shown", false)
-
-        if (!shown) {
-           showGuide(1)
-        }
-
-
 
         val navHostFragment: Fragment? =
             supportFragmentManager.findFragmentById(R.id.navHostFragment)
@@ -72,6 +56,30 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        //guideContainer = findViewById(R.id.guideContainer)
+        binding.includeguia.root.bringToFront()
+         guideContainer = binding.includeguia.guideContainer
+
+        guideContainer.isClickable = true
+        guideContainer.isFocusable = true
+
+
+
+        guideContainer.bringToFront()
+
+        guideContainer.visibility = View.GONE
+
+//        val prefs = getSharedPreferences("guide", MODE_PRIVATE)
+//        val shown = prefs.getBoolean("shown", false)
+
+     //   if (!shown) {
+           showGuide(1)
+      //  }
+
+
+
+
 
 
     }
@@ -114,6 +122,17 @@ class MainActivity : AppCompatActivity() {
         guideContainer.removeAllViews()
         guideContainer.visibility = View.VISIBLE
 
+        guideContainer.elevation = 20f
+
+        supportActionBar?.hide()
+        binding.navView.visibility = View.VISIBLE
+        binding.navView.isEnabled = false
+
+        binding.navView.alpha = 0.5f
+
+        guideContainer.elevation = 15f
+
+
         val layout = when(step) {
             1 -> R.layout.guia_1_bienvenida
             2 -> R.layout.guia_personajes
@@ -126,9 +145,76 @@ class MainActivity : AppCompatActivity() {
         val guideView = layoutInflater.inflate(layout, guideContainer, false)
         guideContainer.addView(guideView)
 
+        val nextBtn = guideView.findViewById<View>(R.id.btnNext) ?: guideView.findViewById<View>(R.id.btnStart)
+
+        nextBtn?.setOnClickListener {
+            if (step < 6) {
+                showGuide(step + 1)
+            } else {
+                finishGuide()
+            }
+        }
+
+//        guideView.findViewById<View>(R.id.btnStart)?.setOnClickListener {
+//            finishGuide()
+//        }
+
         guideView.startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.scale_in)
         )
+
+
+        if (step == 1 ||step == 2 || step == 3 || step == 4) {
+            val circle = guideView.findViewById<View>(R.id.focus_circle)
+            val focusAnim = AnimationUtils.loadAnimation(this, R.anim.focus_in)
+            circle?.startAnimation(focusAnim)
+
+            // El texto también tiene una animación suave
+            val tv = guideView.findViewById<View>(R.id.tvGuide)
+            val bocadillo = guideView.findViewById<View>(R.id.bocadillo)
+            val finguia = guideView.findViewById<View>(R.id.btnFinGuia)
+
+finguia?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha))
+
+
+
+            tv?.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in))
+
+            bocadillo?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.jump))
+
+
+
+
+
+            val botonAnimado = guideView.findViewById<View>(R.id.btnNext)
+            botonAnimado?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.jump))
+
+            val botonStartAnimado = guideView.findViewById<View>(R.id.btnStart)
+            botonStartAnimado?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.jump))
+
+            val txtAnim = guideView.findViewById<View>(R.id.tvWelcome)
+            txtAnim?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.jump))
+
+            val logoAnimado = guideView.findViewById<View>(R.id.ivLogo)
+            logoAnimado?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.giro))
+
+
+        }
+
+    }
+
+    private fun finishGuide() {
+        guideContainer.removeAllViews()
+        guideContainer.visibility = View.GONE
+
+        // Devolvemos la UI a la normalidad
+        supportActionBar?.show()
+        binding.navView.visibility = View.VISIBLE
+        binding.navView.isEnabled = true
+
+        // Guardamos en preferencias
+        val prefs = getSharedPreferences("guide", MODE_PRIVATE)
+        prefs.edit().putBoolean("shown", true).apply()
     }
 
 

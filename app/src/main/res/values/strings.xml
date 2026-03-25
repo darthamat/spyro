@@ -10,4 +10,10 @@
     <string name="texto_bienvenida">Preparate para descubir un mundo mágico a traves de esta app inspirada en</string>
     <string name="comenzar">Comenzar</string>
     <string name="txtlogo">logo</string>
+    <string name="txt_personajes">¡Mira aquí los Personajes del mundo de Spyro!</string>
+    <string name="txt_siguiente">Siguiente</string>
+    <string name="txt_mundos">Aquí podrás explorar a todos los mundos que podras encontrar en Spyro.</string>
+    <string name="txt_coleccionables">Aquí podrás descubrir todos los objetos coleccionables del mundo de Spyro.</string>
+    <string name="txt_tituloBienvenida">Bienvenido al mundo de Spyro</string>
+    <string name="terminar_guia">TERMINAR GUIA</string>
 </resources>
