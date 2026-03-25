@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import dam.pmdm.spyrothedragon.MainActivity
 import dam.pmdm.spyrothedragon.R
 import dam.pmdm.spyrothedragon.models.Character
 
@@ -32,6 +33,26 @@ class CharactersAdapter(
 
         val drawableRes = characterImages[character.image] ?: R.drawable.placeholder
         holder.imageImageView.setImageResource(drawableRes)
+
+        holder.itemView.setOnLongClickListener {    val character = list[position]
+            if (character.name.equals("Ripto", ignoreCase = true)) {
+
+                // Calculamos el centro del ítem en la pantalla
+                val location = IntArray(2)
+                holder.itemView.getLocationOnScreen(location)
+                val x = location[0] + (holder.itemView.width / 8f)
+                val y = location[1] + (holder.itemView.height / 50f) // Un poco más arriba del centro (donde está el cetro)
+
+                val context = holder.itemView.context
+                if (context is MainActivity) {
+                    context.showRiptoMagicAnimation(x, y)
+                }
+                true
+            } else {
+                false
+            }
+        }
+
     }
 
     override fun getItemCount(): Int = list.size

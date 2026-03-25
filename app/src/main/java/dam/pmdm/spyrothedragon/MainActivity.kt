@@ -1,5 +1,6 @@
 package dam.pmdm.spyrothedragon
 
+import android.R.attr.radius
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,6 +9,8 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.alpha
+import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -296,6 +299,60 @@ finguia?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha))
         // 5. Iniciar la reproducción
         videoView.start()
     }
+
+    // En MainActivity.kt
+
+    fun showRiptoMagicAnimation(x: Float, y: Float) {
+        // Pasamos las coordenadas a la vista personalizada
+        val magicView = RiptoMagicView(this, x, y)
+        guideContainer.removeAllViews()
+        guideContainer.visibility = View.VISIBLE
+        guideContainer.addView(magicView)
+        guideContainer.elevation = 200f
+
+        magicView.postDelayed({
+            guideContainer.visibility = View.GONE
+            guideContainer.removeAllViews()
+        }, 4000)
+    }
+
+    // Clase para la animación con Canvas
+    class RiptoMagicView(context: android.content.Context, val posX: Float, val posY: Float) : View(context) {
+        private val paint = android.graphics.Paint()
+        private var radius = 0f
+        private var alphaVal = 0
+        private val colors = intArrayOf(
+            android.graphics.Color.RED,
+            android.graphics.Color.MAGENTA,
+            android.graphics.Color.YELLOW
+        )
+        private var colorIndex = 0
+
+        override fun onDraw(canvas: android.graphics.Canvas) {
+            super.onDraw(canvas)
+
+            // Usamos posX y posY que vienen del toque del usuario
+            val centerX = posX
+            val centerY = posY
+
+            paint.color = colors[colorIndex]
+            paint.alpha = alphaVal
+            paint.style = android.graphics.Paint.Style.FILL
+
+            canvas.drawCircle(centerX, centerY, radius, paint)
+            canvas.drawCircle(centerX, centerY, radius * 0.5f, paint)
+
+            radius += 5f
+            alphaVal = (alphaVal + 5) % 255
+            if (radius > 300f) {
+                radius = 0f
+                colorIndex = (colorIndex + 1) % colors.size
+            }
+
+            invalidate()
+        }
+    }
+
 
 
 }
