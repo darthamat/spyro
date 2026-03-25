@@ -3,30 +3,48 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/focus_circle"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:background="@drawable/shape_circle_outline"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        android:layout_marginBottom="5dp" />
+    <ImageView
+        android:id="@+id/ivFlecha"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@android:drawable/ic_menu_send"
+        android:rotation="-45"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="30dp"
+        android:orientation="vertical"
+        android:gravity="center"
+
+        app:tint="@android:color/white"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/bocadillo"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bubble"
         android:padding="16dp"
-        android:layout_gravity="top|start"
-        android:layout_margin="16dp">
+        android:layout_gravity="top|end"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="El boton INFO muestra quien es el creqador de esta guia."
-            android:textColor="@android:color/black"/>
+            android:text="@string/strinfo"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Siguiente"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+
+        android:textColor="@android:color/white"/>
 
 </FrameLayout>

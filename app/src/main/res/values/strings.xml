@@ -17,4 +17,9 @@
     <string name="txt_tituloBienvenida">Bienvenido al mundo de Spyro</string>
     <string name="terminar_guia">TERMINAR GUIA</string>
     <string name="btncomenzar">Comenzar</string>
+    <string name="info">El boton INFO muestra quien es el creador de esta guia.</string>
+    <string name="strinfo">El botón INFO muestra quién es el creador de esta guía.</string>
+    <string name="comenzar_aventura">¡COMENZAR AVENTURA!</string>
+    <string name="lista">Ya conoces:\n✅ Personajes\n✅ Mundos\n✅ Coleccionables\n✅ Soporte</string>
+    <string name="gu_a_completada">¡Guía Completada!</string>
 </resources>

@@ -73,21 +73,20 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        guideContainer.bringToFront()
 
-        //guideContainer.visibility = View.GONE
 
-//        val prefs = getSharedPreferences("guide", MODE_PRIVATE)
-//        val shown = prefs.getBoolean("shown", false)
 
-     //   if (!shown) {
+       val prefs = getSharedPreferences("guide", MODE_PRIVATE)
+       val shown = prefs.getBoolean("shown", false)
+
+       if (!shown) {
            showGuide(1)
-      //  }
+        }else {
+           // Si ya se mostró, ocultamos el contenedor por si acaso
+           guideContainer.visibility = View.GONE
+       }
 
-
-
-
-
+        //guideContainer.bringToFront()
 
     }
 
@@ -177,8 +176,7 @@ class MainActivity : AppCompatActivity() {
 
                 showGuide(step + 1)
             } else {
-
-
+                navController?.navigate(R.id.navigation_characters)
                 finishGuide()
             }
         }
@@ -227,9 +225,17 @@ finguia?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha))
             val logoAnimado = guideView.findViewById<View>(R.id.ivLogo)
             logoAnimado?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.giro))
 
+            val flecha = guideView.findViewById<View>(R.id.ivFlecha)
+            flecha?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.jump))
+
 
         }
         if (step == 5 ||step == 6) {
+
+            val flecha = guideView.findViewById<View>(R.id.ivFlecha)
+            flecha?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.jump))
+
+
 
             supportActionBar?.show()
             binding.navView.visibility = View.VISIBLE
@@ -251,6 +257,8 @@ finguia?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha))
 
         for (i in 0 until binding.navView.menu.size()) {
             binding.navView.menu.getItem(i).isEnabled = true
+
+            navController?.navigate(R.id.navigation_characters)
         }
 
         // Guardamos en preferencias

@@ -1,21 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="@drawable/background"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="#80000000"> <!-- Fondo semi-transparente -->
 
-    <TextView
-        android:text="Bienvenido al mundo de Spyro"
-        android:textSize="24sp"
-        android:textColor="@android:color/white"
+    <LinearLayout
+        android:id="@+id/bocadillo"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
+        android:layout_gravity="center"
+        android:background="@drawable/bubble"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <Button
-        android:id="@+id/btnStart"
-        android:text="Comenzar"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
-</LinearLayout>
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/spyro_logo_2018"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gu_a_completada"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/lista"
+            android:textColor="#444444"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"/>
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#FFD700"
+            android:text="@string/comenzar_aventura"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
+</FrameLayout>
